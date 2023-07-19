@@ -1,0 +1,12 @@
+code/SimSwap/output/**
+code/SimSwap/crop_224/**
+code/SimSwap/checkpoints/**
+code/SimSwap/demo_file/**
+/data
+*.tar
+*.pth
+*.onnx
+*.zip
+.ipynb_checkpoints
+**/.ipynb_checkpoints/
+**/__pycache__/
