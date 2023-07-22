@@ -1,17 +1,21 @@
 import streamlit as st
-from PIL import Image
+from homePage import show_homePage
+from uploadPage import show_uploadPage
+from resultPage import show_resultPage
 
-def up_callback():
-    st.session_state.num += 1
+def main():
+    st.title("CV06 - 최종 프로젝트")
+    
+    # entrypoint file
+    if 'page' not in st.session_state:
+        st.session_state.page = 'home_page'
 
-if 'num' not in st.session_state:
-    st.session_state.num = 0
+    if st.session_state.page == 'home_page':
+        show_homePage()
+    elif st.session_state.page == 'upload_page':
+        show_uploadPage()
+    elif st.session_state.page == 'result_page':
+        show_resultPage()
 
-st.text("hello, world!")
-
-button = st.button('up', on_click=up_callback)
-st.write(st.session_state.num)
-
-img = Image.open("serving/data/id_f_1.jpg")
-
-st.image(img)
+if __name__ == "__main__":
+    main()
