@@ -1,2 +1,11 @@
+# streamlit
 streamlit
 pillow
+
+# simswap
+
+
+# arcface
+insightface
+onnxruntime
+numpy

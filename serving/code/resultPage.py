@@ -1,23 +1,55 @@
 import streamlit as st
 from PIL import Image
 import io
+import os
+import insightface
+import numpy as np
 
 def image_to_bytes(image):
     img_byte_array = io.BytesIO()
     image.save(img_byte_array, format = "JPEG")
     return img_byte_array.getvalue()
 
+@st.cache_resource
+def load_insight_model():
+    model = insightface.app.FaceAnalysis()
+    model.prepare(ctx_id=0)
+    return model
+
+@st.cache_data
+def load_embedding_vectors(path):
+    dir = os.path.join(path, "embedding_vectors.npz")
+    ref_vectors = np.load(dir)['data']
+    return ref_vectors
+
 def get_reference_images(domain, gender, src):
     
-    # todo : Arcface로 src와 유사한 이미지 3개 리턴
-    references = []
+    # dataset path
+    path = "serving/data" # todo : domain + gender에 따라 path 설정
+    files = os.listdir(path)
+    files = [file for file in files if file.lower().endswith(('.jpg', '.jpeg', '.png'))]
 
-    # test
-    references.append(Image.open("serving/data/pro_m_1.jpg"))
-    references.append(Image.open("serving/data/pro_m_2.jpg"))
-    references.append(Image.open("serving/data/pro_m_3.jpg"))
+    # ref 이미지 embedding vector 읽어오기
+    ref_vectors = load_embedding_vectors(path)
 
-    return references
+    # src embedding vector 구하기
+    model = load_insight_model()
+    src = np.array(Image.open(src))
+    src_vector = model.get(src)[0]['embedding']
+
+    # cosine similarity 
+    similarities = np.dot(ref_vectors, src_vector) / (np.linalg.norm(ref_vectors, axis=1) * np.linalg.norm(src_vector))
+
+    # 가장 유사한 이미지 3개 
+    top3_img_idx = np.argsort(similarities)[::-1][:3]
+
+    results = []
+    for idx in top3_img_idx:
+        file = files[idx]
+        img = Image.open(os.path.join(path, file))
+        results.append(img)
+
+    return results
 
 def get_result_images(src, refs):
     
@@ -25,12 +57,7 @@ def get_result_images(src, refs):
 
     results = []
 
-    # test
-    results.append(Image.open("serving/data/pro_m_1.jpg"))
-    results.append(Image.open("serving/data/pro_m_2.jpg"))
-    results.append(Image.open("serving/data/pro_m_3.jpg"))
-
-    return results
+    return refs
 
 def reupload_callback():
     del st.session_state["src"]
