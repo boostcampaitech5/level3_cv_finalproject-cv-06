@@ -4,7 +4,7 @@ from uploadPage import show_uploadPage
 from resultPage import show_resultPage
 
 def main():
-    st.title("CV06 - 최종 프로젝트")
+    st.title("AI 사진관📷")
     
     # entrypoint file
     if 'page' not in st.session_state:

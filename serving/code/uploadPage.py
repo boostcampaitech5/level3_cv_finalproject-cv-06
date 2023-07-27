@@ -11,6 +11,13 @@ def next_callback():
 def prev_callback():
     if "src" in st.session_state:
         del st.session_state["src"]
+    if "gender" in st.session_state:
+        del st.session_state["gender"]
+    if "bangs" in st.session_state:
+        del st.session_state["bangs"]
+    if "hair" in st.session_state:
+        del st.session_state["hair"]
+
     st.session_state.page = "home_page"
 
 def show_uploadPage():
@@ -35,9 +42,9 @@ def show_uploadPage():
     description_col, image_col = st.columns(2)
     
     # 설명 및 성별 설정
-    description_col.write("* 이미지 업로드 주의 사항 및 설명")
-    description_col.divider()
-    st.session_state.gender = description_col.radio("성별을 선택해주세요.", ("남성", "여성"), horizontal=True)
+    description_col.markdown("#### 이미지 업로드 주의 사항")
+    description_col.write("* 정면을 바라보는 사진을 업로드 해주세요.")
+    description_col.write("* 성별 및 원하는 스타일 선택 사항을 선택해 주세요.")
 
     # 이미지 업로드
     img = image_col.file_uploader("upload your image", type=["jpg", "jpeg", "png"])
@@ -47,8 +54,25 @@ def show_uploadPage():
     elif "src" in st.session_state:
         del st.session_state["src"]
 
+    st.divider()
+
+    style = st.container()
+    style.markdown("#### 스타일 선택 사항")
+    st.session_state.gender = style.radio("성별", ("남성", "여성"), horizontal=True)
+
+    if st.session_state.domain == "id":
+        if st.session_state.gender == "남성":
+            st.session_state.bangs = style.radio("앞머리 유무", ("O", "X"), horizontal=True)
+        else:
+            st.session_state.bangs = style.radio("앞머리 유무", ("O", "X"), horizontal=True)
+            if st.session_state.bangs == "X":
+                st.session_state.hair = style.radio("머리 스타일", ("장발", "단발", "묶은 머리"), horizontal=True)
+            else:
+                st.session_state.hair = style.radio("머리 스타일", ("장발", "단발"), horizontal=True)
+
+    st.divider()
     # 버튼
     next = st.button("다음 단계", on_click=next_callback, use_container_width=True)
-    prev = st.button("스타일 다시 선택하기", on_click=prev_callback, use_container_width=True)
+    prev = st.button("처음으로", on_click=prev_callback, use_container_width=True)
 
     
