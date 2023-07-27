@@ -30,13 +30,6 @@ def image_to_bytes(image):
     img_byte_array = io.BytesIO()
     image.save(img_byte_array, format = "JPEG")
     return img_byte_array.getvalue()
-'''
-@st.cache_resource
-def load_insight_model():
-    model = insightface.app.FaceAnalysis()
-    model.prepare(ctx_id=0)
-    return model
-'''
 
 @st.cache_resource
 def load_simswap_model():
@@ -56,6 +49,36 @@ def load_embedding_vectors(path):
     ref_vectors = np.load(dir)['data']
     return ref_vectors
 
+def get_domain_path():
+    dir = "/opt/ml/input/serving/data/"
+
+    # 스타일
+    dir += (st.session_state.domain + "/")
+
+    # 성별
+    dir += (st.session_state.gender + "/")
+
+    # 머리 스타일
+    if st.session_state.domain == "id":
+        if st.session_state.gender == "female":
+            if st.session_state.bangs == "O" and st.session_state.hair == "장발":
+                dir += "bangs_long/"
+            elif st.session_state.bangs == "O" and st.session_state.hair == "단발":
+                dir += "bangs_short/"
+            elif st.session_state.bangs == "X" and st.session_state.hair == "장발":
+                dir += "noBangs_long/"
+            elif st.session_state.bangs == "X" and st.session_state.hair == "단발":
+                dir += "noBangs_short/"
+            elif st.session_state.bangs == "X" and st.session_state.hair == "묶은 머리":
+                dir += "noBangs_tie/"
+        elif st.session_state.gender == "male":
+            if st.session_state.bangs == "O":
+                dir += "bangs"
+            elif st.session_state.bangs == "X":
+                dir += "noBangs"
+
+    return dir
+
 def get_reference_images(domain, gender, src):
     crop_size =opt.crop_size
     transformer_Arcface = transforms.Compose([
@@ -64,23 +87,16 @@ def get_reference_images(domain, gender, src):
     ])
 
     # dataset path
-    path = "/opt/ml/input/serving/data" # todo : domain + gender에 따라 path 설정
+    path = get_domain_path() # todo : domain + gender에 따라 path 설정
     files = os.listdir(path)
     files = [file for file in files if file.lower().endswith(('.jpg', '.jpeg', '.png'))]
 
     # ref 이미지 embedding vector 읽어오기
     ref_vectors = load_embedding_vectors(path)
-    '''
-    # src embedding vector 구하기
-    model = load_insight_model()
-    src = np.array(Image.open(src))
-    src_vector = model.get(src)[0]['embedding']
-    '''
+
     # src embedding vector 구하기
     model = load_simswap_model()
     app = load_app()
-    #app = Face_detect_crop(name='antelope', root='/opt/ml/input/code/SimSwap/insightface_func/models')
-    #app.prepare(ctx_id= 0, det_thresh=0.6, det_size=(640,640),mode='None')
     
     #####pil 2 img##
     src = np.array(Image.open(src))
@@ -232,8 +248,6 @@ def show_resultPage():
 
     # result 이미지
     results = get_result_images(st.session_state.src, refs)
-    print(len(results))
-
 
     cols = st.columns(3)
     for i in range(3):
