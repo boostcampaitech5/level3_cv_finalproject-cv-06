@@ -56,11 +56,14 @@ def get_domain_path():
     dir += (st.session_state.domain + "/")
 
     # 성별
-    dir += (st.session_state.gender + "/")
+    if st.session_state.gender == "여성":
+        dir += "female/"
+    else:
+        dir += "male/"
 
     # 머리 스타일
     if st.session_state.domain == "id":
-        if st.session_state.gender == "female":
+        if st.session_state.gender == "여성":
             if st.session_state.bangs == "O" and st.session_state.hair == "장발":
                 dir += "bangs_long/"
             elif st.session_state.bangs == "O" and st.session_state.hair == "단발":
@@ -71,7 +74,7 @@ def get_domain_path():
                 dir += "noBangs_short/"
             elif st.session_state.bangs == "X" and st.session_state.hair == "묶은 머리":
                 dir += "noBangs_tie/"
-        elif st.session_state.gender == "male":
+        elif st.session_state.gender == "남성":
             if st.session_state.bangs == "O":
                 dir += "bangs"
             elif st.session_state.bangs == "X":
