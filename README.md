@@ -48,6 +48,10 @@ git clone https://github.com/boostcampaitech5/level3_cv_finalproject-cv-06.git
 
 #### Environment
 ```
+wget https://developer.download.nvidia.com/compute/cuda/11.0.3/local_installers/cuda_11.0.3_450.51.06_linux.run
+sh cuda_11.0.3_450.51.06_linux.run
+apt-get update
+apt-get install g++
 conda create -n ai-photo-studio
 conda activate ai-photo-studio
 conda install --file requirements.txt
