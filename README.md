@@ -29,10 +29,10 @@ The dataset is located in the "serving/data/" directory. The images in this data
 |Profile|female|||profile/female|
 ||male|||profile/male|
 |Identity|female|O|long|id/female/bangs_long|
-||||long|id/female/bangs_long|
 ||||short|id/female/bangs_short|
 |||X|long|id/female/noBangs_long|
 ||||short|id/female/noBangs_short|
+||||tie|id/female/noBangs_tie|
 ||male|O||id/male/bangs|
 |||X||id/male/noBangs|
 
@@ -57,7 +57,7 @@ streamlit run serving/code/main.py
 ```
 
 ## Results
-
+![results](https://github.com/boostcampaitech5/level3_cv_finalproject-cv-06/assets/67624124/40e865a4-c7fb-4493-877a-cdc2a22048ab)
 
 ## License
 For academic and non-commercial use only.The whole project is under the CC-BY-NC 4.0 license. See [LICENSE](https://github.com/neuralchen/SimSwap/blob/main/LICENSE) for additional details.
