@@ -1,6 +1,8 @@
 # AI 사진관
 "**AI 사진관**" is a service that can generate identification photos highly resembling the user anytime and anywhere.
 
+[Project Presentation Video](https://www.youtube.com/watch?v=u7cyPepuSsQ)
+
 ## 얼GAN이들
 
 임지윤|정현진|오서영|이현구|김가영|
