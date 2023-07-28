@@ -17,7 +17,8 @@ from torchvision import transforms
 from models.models import create_model
 from options.infer_options import TestOptions
 from insightface_func.face_detect_crop_single import Face_detect_crop
-from util.reverse2original_infer import reverse2wholeimage
+# from util.reverse2original_infer import reverse2wholeimage
+from util.reverse2original_infer_gfp import reverse2wholeimage
 import os
 from util.add_watermark import watermark_image
 from util.norm import SpecificNorm
