@@ -17,19 +17,30 @@ from torchvision import transforms
 from models.models import create_model
 from options.infer_options import TestOptions
 from insightface_func.face_detect_crop_single import Face_detect_crop
-# from util.reverse2original_infer import reverse2wholeimage
 from util.reverse2original_infer_gfp import reverse2wholeimage
 import os
 from util.add_watermark import watermark_image
 from util.norm import SpecificNorm
 from parsing_model.model import BiSeNet
-
+from imwatermark import WatermarkEncoder
 
 opt = TestOptions().parse()
 
+def iwatermark(img):
+    img=np.array(img)
+    img=cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
+    wm = 'AI'
+
+    encoder = WatermarkEncoder()
+    encoder.set_watermark('bytes', wm.encode('utf-8'))
+    bgr_encoded = encoder.encode(img, 'dwtDct')
+    #cv2pil
+    bgr_encoded = cv2.cvtColor(bgr_encoded, cv2.COLOR_BGR2RGB)
+    bgr_encoded = Image.fromarray(bgr_encoded)
+    return bgr_encoded
 def image_to_bytes(image):
     img_byte_array = io.BytesIO()
-    image.save(img_byte_array, format = "JPEG")
+    image.save(img_byte_array, format = "PNG")
     return img_byte_array.getvalue()
 
 @st.cache_resource
@@ -258,11 +269,12 @@ def show_resultPage():
         col = cols[i]
         
         # image
+        results[i]=iwatermark(results[i])
         col.image(results[i])
 
         # download button
         img_byte = image_to_bytes(results[i])
-        col.download_button("다운로드", data=img_byte, file_name=f"{st.session_state.domain}_{st.session_state.gender}_{i}.jpg", use_container_width=True)
+        col.download_button("다운로드", data=img_byte, file_name=f"{st.session_state.domain}_{st.session_state.gender}_{i}.png", use_container_width=True)
 
 
     # button
