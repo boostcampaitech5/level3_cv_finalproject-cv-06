@@ -63,7 +63,7 @@ streamlit run serving/code/main.py
 ```
 
 ## Results
-![results](https://github.com/boostcampaitech5/level3_cv_finalproject-cv-06/assets/67624124/40e865a4-c7fb-4493-877a-cdc2a22048ab)
+![results](https://github.com/boostcampaitech5/level3_cv_finalproject-cv-06/assets/67624124/1af0afbc-0564-4364-8a61-0011b17ccc8c)
 
 ## License
 For academic and non-commercial use only.The whole project is under the CC-BY-NC 4.0 license. See [LICENSE](https://github.com/neuralchen/SimSwap/blob/main/LICENSE) for additional details.
